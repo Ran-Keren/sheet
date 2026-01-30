@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת הזנת נתונים - בחירה מרובה</title>
+    <title>מערכת הזנת נתונים - גוגל שיטס</title>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -31,7 +31,7 @@
             background: var(--card-bg);
             width: 100%;
             max-width: 450px;
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 16px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
@@ -50,19 +50,16 @@
 
         label {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 600;
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.5rem;
             color: #4b5563;
         }
 
-        .hint {
-            font-size: 0.75rem;
-            color: #6b7280;
-            margin-bottom: 0.5rem;
-        }
-
-        input, select, textarea {
+        input[type="text"], 
+        input[type="date"], 
+        input[type="url"], 
+        textarea {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid var(--border);
@@ -73,12 +70,32 @@
             transition: all 0.2s;
         }
 
-        /* עיצוב מיוחד לבחירה מרובה */
-        select[multiple] {
-            height: 120px;
+        /* עיצוב צ'קבוקסים */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            background: #f9fafb;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
         }
 
-        input:focus, select:focus, textarea:focus {
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            margin-left: 8px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        input:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
@@ -88,7 +105,7 @@
             width: 100%;
             background-color: var(--primary);
             color: white;
-            padding: 0.8rem;
+            padding: 0.9rem;
             border: none;
             border-radius: 8px;
             font-size: 1.1rem;
@@ -113,8 +130,8 @@
             font-size: 0.95rem;
             font-weight: 600;
             display: none;
-            padding: 10px;
-            border-radius: 6px;
+            padding: 12px;
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -134,16 +151,15 @@
         </div>
 
         <div class="form-group">
-            <label for="category">קטגוריות</label>
-            <div class="hint">(ניתן לבחור כמה בעזרת Ctrl / Cmd)</div>
-            <select id="category" multiple>
-                <option value="חיובי">חיובי</option>
-                <option value="משמעת">משמעת</option>
-                <option value="מקצועי">מקצועי</option>
-                <option value="איחור">איחור/חיסור</option>
-                <option value="סידור">סידור</option>
-                <option value="התנהלות">התנהלות</option>
-            </select>
+            <label>קטגוריות (ניתן לבחור כמה)</label>
+            <div class="checkbox-grid">
+                <label class="checkbox-item"><input type="checkbox" name="category" value="חיובי"> חיובי</label>
+                <label class="checkbox-item"><input type="checkbox" name="category" value="משמעת"> משמעת</label>
+                <label class="checkbox-item"><input type="checkbox" name="category" value="מקצועי"> מקצועי</label>
+                <label class="checkbox-item"><input type="checkbox" name="category" value="איחור"> איחור/חיסור</label>
+                <label class="checkbox-item"><input type="checkbox" name="category" value="סידור"> סידור</label>
+                <label class="checkbox-item"><input type="checkbox" name="category" value="התנהלות"> התנהלות</label>
+            </div>
         </div>
         
         <div class="form-group">
@@ -167,7 +183,8 @@
 </div>
 
 <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbyLtKYdWcs52HWxuK_L8Jfaqt8VbyaFLbr93p8t5dNlIQkpJZuwvDsJ7VWU4cGqBF0/exec';
+    // הכתובת המעודכנת שסיפקת
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzXuOOHR6v7iJpQT7B3fF4cO7lcCbvvYlK0Wf435g0U45Lx5zoRjf91Jh2FxiEbgcPt/exec';
     
     const form = document.getElementById('sheetForm');
     const btn = document.getElementById('submitBtn');
@@ -180,9 +197,10 @@
         btn.innerText = 'שולח נתונים...';
         status.style.display = 'none';
         
-        // איסוף כל הקטגוריות שנבחרו
-        const categorySelect = document.getElementById('category');
-        const selectedCategories = Array.from(categorySelect.selectedOptions).map(option => option.value).join(', ');
+        // איסוף קטגוריות שנבחרו מהצ'קבוקסים
+        const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+            .map(cb => cb.value)
+            .join(', ');
 
         const data = {
             date: document.getElementById('date').value,
@@ -202,7 +220,7 @@
             status.style.display = 'block';
             status.style.color = '#166534';
             status.style.backgroundColor = '#dcfce7';
-            status.innerText = '✓ הנתונים נוספו לגיליון בהצלחה!';
+            status.innerText = '✓ הנתונים נשלחו בהצלחה!';
             form.reset();
             btn.disabled = false;
             btn.innerText = 'שלח לגיליון';
