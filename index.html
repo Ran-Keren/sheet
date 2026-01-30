@@ -56,10 +56,7 @@
             color: #4b5563;
         }
 
-        input[type="text"], 
-        input[type="date"], 
-        input[type="url"], 
-        textarea {
+        input, textarea {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid var(--border);
@@ -132,12 +129,41 @@
         </div>
         
         <div class="form-group">
-            <label for="agentName">שם הנציג/ה</label>
-            <input type="text" id="agentName" placeholder="הכנס שם מלא" required>
+            <label for="agentName">שם הנציג/ה (הקלד לחיפוש)</label>
+            <input type="text" id="agentName" list="namesList" placeholder="התחל להקליד שם..." required>
+            <datalist id="namesList">
+                <option value="מלאק סבאח">
+                <option value="קתרין בצ'שצ'ה">
+                <option value="אור שמונוב">
+                <option value="אייל ח'יר">
+                <option value="אלאן ג׳בארין">
+                <option value="אמינה אלבאש">
+                <option value="אנגולינה מטר">
+                <option value="ג׳ואנה קסיס">
+                <option value="גוהאינה סואעד">
+                <option value="גיווארה רפידי">
+                <option value="דולב וסטרייך">
+                <option value="יוסף דאוד">
+                <option value="יזן קזל">
+                <option value="לארה גזאווי">
+                <option value="מאיה חדאד">
+                <option value="מהדי זועבי">
+                <option value="מוחמד שאהין">
+                <option value="מייס עבד אל רחמאן">
+                <option value="מרואן חוסיסי">
+                <option value="סאלי גרזוזי">
+                <option value="עיסא עוייס">
+                <option value="פרלה דיק">
+                <option value="רודין חדאד">
+                <option value="רולא דראושה">
+                <option value="רפאל דאמוני">
+                <option value="רפאל סימנדויב">
+                <option value="שמואל טטרואשוילי">
+            </datalist>
         </div>
 
         <div class="form-group">
-            <label>קטגוריות (ניתן לבחור כמה)</label>
+            <label>קטגוריות</label>
             <div class="checkbox-grid">
                 <label class="checkbox-item"><input type="checkbox" name="category" value="חיובי"> חיובי</label>
                 <label class="checkbox-item"><input type="checkbox" name="category" value="משמעת"> משמעת</label>
@@ -182,14 +208,12 @@
         btn.innerText = 'שולח נתונים...';
         status.style.display = 'none';
         
-        // עיבוד תאריך לפורמט D/M (ללא אפסים מובילים)
+        // עיבוד תאריך לפורמט D/M
         const rawDate = document.getElementById('date').value;
         let formattedDate = "";
         if (rawDate) {
             const dateObj = new Date(rawDate);
-            const day = dateObj.getDate();
-            const month = dateObj.getMonth() + 1;
-            formattedDate = day + '/' + month; // יוצר 8/1 במקום 08/01
+            formattedDate = dateObj.getDate() + '/' + (dateObj.getMonth() + 1);
         }
 
         const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
