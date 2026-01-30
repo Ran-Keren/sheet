@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>מערכת הזנת נתונים</title>
+    <title>מערכת הזנת נתונים - בחירה מרובה</title>
     <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -52,8 +52,14 @@
             display: block;
             font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.2rem;
             color: #4b5563;
+        }
+
+        .hint {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
         }
 
         input, select, textarea {
@@ -65,6 +71,11 @@
             font-family: inherit;
             box-sizing: border-box;
             transition: all 0.2s;
+        }
+
+        /* עיצוב מיוחד לבחירה מרובה */
+        select[multiple] {
+            height: 120px;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -123,14 +134,15 @@
         </div>
 
         <div class="form-group">
-            <label for="category">קטגוריה</label>
-            <select id="category">
+            <label for="category">קטגוריות</label>
+            <div class="hint">(ניתן לבחור כמה בעזרת Ctrl / Cmd)</div>
+            <select id="category" multiple>
                 <option value="חיובי">חיובי</option>
                 <option value="משמעת">משמעת</option>
                 <option value="מקצועי">מקצועי</option>
                 <option value="איחור">איחור/חיסור</option>
                 <option value="סידור">סידור</option>
-                <option value="נהלים">נהלים</option>
+                <option value="התנהלות">התנהלות</option>
             </select>
         </div>
         
@@ -155,7 +167,6 @@
 </div>
 
 <script>
-    // ה-URL של הסקריפט שלך (נשאר אותו דבר)
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyLtKYdWcs52HWxuK_L8Jfaqt8VbyaFLbr93p8t5dNlIQkpJZuwvDsJ7VWU4cGqBF0/exec';
     
     const form = document.getElementById('sheetForm');
@@ -169,10 +180,14 @@
         btn.innerText = 'שולח נתונים...';
         status.style.display = 'none';
         
+        // איסוף כל הקטגוריות שנבחרו
+        const categorySelect = document.getElementById('category');
+        const selectedCategories = Array.from(categorySelect.selectedOptions).map(option => option.value).join(', ');
+
         const data = {
             date: document.getElementById('date').value,
             agentName: document.getElementById('agentName').value,
-            category: document.getElementById('category').value,
+            category: selectedCategories,
             description: document.getElementById('description').value,
             link: document.getElementById('link').value,
             status: document.getElementById('statusInput').value
