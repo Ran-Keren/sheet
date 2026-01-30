@@ -1,44 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Entry Portal</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <title>מערכת הזנת נתונים</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #4f46e5;
             --primary-hover: #4338ca;
-            --bg: #f9fafb;
-            --text: #111827;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --border: #d1d5db;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Assistant', sans-serif;
             background-color: var(--bg);
             color: var(--text);
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            background: var(--card-bg);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         h2 {
-            margin-top: 0;
-            font-weight: 600;
-            font-size: 1.5rem;
             text-align: center;
-            color: #1f2937;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
         }
 
         .form-group {
@@ -47,23 +50,24 @@
 
         label {
             display: block;
-            font-size: 0.875rem;
+            font-size: 0.9rem;
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: #4b5563;
         }
 
-        input, textarea {
+        input, select, textarea {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
             font-size: 1rem;
-            box-sizing: border-box; /* Crucial for padding */
-            transition: border-color 0.2s, box-shadow 0.2s;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: all 0.2s;
         }
 
-        input:focus, textarea:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
@@ -73,54 +77,87 @@
             width: 100%;
             background-color: var(--primary);
             color: white;
-            padding: 0.75rem;
+            padding: 0.8rem;
             border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: background-color 0.2s;
+            margin-top: 1rem;
         }
 
         button:hover {
             background-color: var(--primary-hover);
         }
 
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
         .status-msg {
-            margin-top: 1rem;
+            margin-top: 1.5rem;
             text-align: center;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
+            font-weight: 600;
             display: none;
+            padding: 10px;
+            border-radius: 6px;
         }
     </style>
 </head>
 <body>
 
 <div class="card">
-    <h2>Submit Record</h2>
+    <h2>הזנת נתונים חדשה</h2>
     <form id="sheetForm">
         <div class="form-group">
-            <label for="date">Date</label>
+            <label for="date">תאריך</label>
             <input type="date" id="date" required>
         </div>
         
         <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" placeholder="e.g. Alex Rivera" required>
+            <label for="agentName">שם הנציג/ה</label>
+            <input type="text" id="agentName" placeholder="הכנס שם מלא" required>
+        </div>
+
+        <div class="form-group">
+            <label for="category">קטגוריה</label>
+            <select id="category">
+                <option value="חיובי">חיובי</option>
+                <option value="משמעת">משמעת</option>
+                <option value="מקצועי">מקצועי</option>
+                <option value="איחור">איחור/חיסור</option>
+                <option value="סידור">סידור</option>
+                <option value="נהלים">נהלים</option>
+            </select>
         </div>
         
         <div class="form-group">
-            <label for="description">Description</label>
-            <textarea id="description" rows="3" placeholder="Enter details here..."></textarea>
+            <label for="description">תיאור המקרה</label>
+            <textarea id="description" rows="3" placeholder="פרט כאן את המקרה..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="link">קישור</label>
+            <input type="url" id="link" placeholder="https://...">
+        </div>
+
+        <div class="form-group">
+            <label for="statusInput">סטטוס / טיפול</label>
+            <input type="text" id="statusInput" placeholder="מה בוצע?">
         </div>
         
-        <button type="submit" id="submitBtn">Send to Sheet</button>
+        <button type="submit" id="submitBtn">שלח לגיליון</button>
     </form>
     <div id="status" class="status-msg"></div>
 </div>
 
 <script>
+    // ה-URL של הסקריפט שלך (נשאר אותו דבר)
     const scriptURL = 'https://script.google.com/macros/s/AKfycbyLtKYdWcs52HWxuK_L8Jfaqt8VbyaFLbr93p8t5dNlIQkpJZuwvDsJ7VWU4cGqBF0/exec';
+    
     const form = document.getElementById('sheetForm');
     const btn = document.getElementById('submitBtn');
     const status = document.getElementById('status');
@@ -128,35 +165,40 @@
     form.addEventListener('submit', e => {
         e.preventDefault();
         
-        // UI Feedback
         btn.disabled = true;
-        btn.innerText = 'Sending...';
+        btn.innerText = 'שולח נתונים...';
+        status.style.display = 'none';
         
         const data = {
             date: document.getElementById('date').value,
-            name: document.getElementById('name').value,
-            description: document.getElementById('description').value
+            agentName: document.getElementById('agentName').value,
+            category: document.getElementById('category').value,
+            description: document.getElementById('description').value,
+            link: document.getElementById('link').value,
+            status: document.getElementById('statusInput').value
         };
 
         fetch(scriptURL, {
             method: 'POST',
-            mode: 'no-cors', // Helps avoid many common browser blocks
+            mode: 'no-cors',
             body: JSON.stringify(data),
         })
         .then(() => {
             status.style.display = 'block';
-            status.style.color = 'green';
-            status.innerText = '✓ Successfully added to sheet!';
+            status.style.color = '#166534';
+            status.style.backgroundColor = '#dcfce7';
+            status.innerText = '✓ הנתונים נוספו לגיליון בהצלחה!';
             form.reset();
             btn.disabled = false;
-            btn.innerText = 'Send to Sheet';
+            btn.innerText = 'שלח לגיליון';
         })
         .catch(error => {
             status.style.display = 'block';
-            status.style.color = 'red';
-            status.innerText = 'Error: ' + error.message;
+            status.style.color = '#991b1b';
+            status.style.backgroundColor = '#fee2e2';
+            status.innerText = 'שגיאה: ' + error.message;
             btn.disabled = false;
-            btn.innerText = 'Try Again';
+            btn.innerText = 'נסה שוב';
         });
     });
 </script>
