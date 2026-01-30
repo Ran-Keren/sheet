@@ -169,7 +169,6 @@
 </div>
 
 <script>
-    // הכתובת המעודכנת שלך
     const scriptURL = 'https://script.google.com/macros/s/AKfycbywoZtALOJu8HY7pmRH7jXrru9CAhr6Oayc_Jxu1ICPqkaL9-4mQICa2Nm6LJCLvRsA/exec';
     
     const form = document.getElementById('sheetForm');
@@ -183,17 +182,16 @@
         btn.innerText = 'שולח נתונים...';
         status.style.display = 'none';
         
-        // 1. עיבוד תאריך לפורמט DD/MM
+        // עיבוד תאריך לפורמט D/M (ללא אפסים מובילים)
         const rawDate = document.getElementById('date').value;
         let formattedDate = "";
         if (rawDate) {
             const dateObj = new Date(rawDate);
-            const day = String(dateObj.getDate()).padStart(2, '0');
-            const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-            formattedDate = `${day}/${month}`;
+            const day = dateObj.getDate();
+            const month = dateObj.getMonth() + 1;
+            formattedDate = day + '/' + month; // יוצר 8/1 במקום 08/01
         }
 
-        // 2. איסוף קטגוריות
         const selectedCategories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
             .map(cb => cb.value)
             .join(', ');
