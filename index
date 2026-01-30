@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Entry Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg: #f9fafb;
+            --text: #111827;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-weight: 600;
+            font-size: 1.5rem;
+            text-align: center;
+            color: #1f2937;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #4b5563;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box; /* Crucial for padding */
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .status-msg {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Submit Record</h2>
+    <form id="sheetForm">
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" id="date" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="e.g. Alex Rivera" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" rows="3" placeholder="Enter details here..."></textarea>
+        </div>
+        
+        <button type="submit" id="submitBtn">Send to Sheet</button>
+    </form>
+    <div id="status" class="status-msg"></div>
+</div>
+
+<script>
+    const scriptURL = 'YOUR_WEB_APP_URL_HERE';
+    const form = document.getElementById('sheetForm');
+    const btn = document.getElementById('submitBtn');
+    const status = document.getElementById('status');
+
+    form.addEventListener('submit', e => {
+        e.preventDefault();
+        
+        // UI Feedback
+        btn.disabled = true;
+        btn.innerText = 'Sending...';
+        
+        const data = {
+            date: document.getElementById('date').value,
+            name: document.getElementById('name').value,
+            description: document.getElementById('description').value
+        };
+
+        fetch(scriptURL, {
+            method: 'POST',
+            mode: 'no-cors', // Helps avoid many common browser blocks
+            body: JSON.stringify(data),
+        })
+        .then(() => {
+            status.style.display = 'block';
+            status.style.color = 'green';
+            status.innerText = '✓ Successfully added to sheet!';
+            form.reset();
+            btn.disabled = false;
+            btn.innerText = 'Send to Sheet';
+        })
+        .catch(error => {
+            status.style.display = 'block';
+            status.style.color = 'red';
+            status.innerText = 'Error: ' + error.message;
+            btn.disabled = false;
+            btn.innerText = 'Try Again';
+        });
+    });
+</script>
+
+</body>
+</html>
