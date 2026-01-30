@@ -39,7 +39,7 @@
         }
 
         header { text-align: center; margin-bottom: 1.5rem; }
-        h2 { margin: 0; color: var(--primary); font-size: 1.6rem; }
+        h2 { margin: 0; color: var(--primary); font-size: 1.6rem; font-weight: 800; }
 
         .form-group { margin-bottom: 1.2rem; }
         label { display: block; font-weight: 700; margin-bottom: 0.5rem; font-size: 0.9rem; }
@@ -54,25 +54,29 @@
             font-family: inherit;
         }
 
-        /* עיצוב בחירת קטגוריות כצ'יפים */
+        /* עיצוב קטגוריות סימטרי - רשת של 2 עמודות */
         .category-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* יוצר 2 עמודות שוות */
+            gap: 10px;
             background: #f1f5f9;
-            padding: 10px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 16px;
         }
 
         .chip {
             cursor: pointer;
-            padding: 6px 14px;
+            padding: 10px;
             background: white;
             border: 2px solid var(--border);
-            border-radius: 20px;
-            font-size: 0.85rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
             font-weight: 600;
-            transition: all 0.2s;
+            text-align: center; /* מרכז את הטקסט בתוך הכפתור */
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .chip input { display: none; }
@@ -81,29 +85,33 @@
             background: var(--primary);
             color: white;
             border-color: var(--primary);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
         button {
             width: 100%;
             background-color: var(--primary);
             color: white;
-            padding: 0.9rem;
+            padding: 1rem;
             border: none;
             border-radius: 12px;
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
             margin-top: 1rem;
+            transition: background 0.2s;
         }
 
+        button:hover:not(:disabled) { background-color: var(--primary-hover); }
         button:disabled { background-color: #cbd5e1; }
 
         .status-msg {
             margin-top: 1rem;
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             border-radius: 10px;
             display: none;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -169,10 +177,8 @@
 </div>
 
 <script>
-    // כתובת ה-API שלך
     const scriptURL = 'https://script.google.com/macros/s/AKfycbywoZtALOJu8HY7pmRH7jXrru9CAhr6Oayc_Jxu1ICPqkaL9-4mQICa2Nm6LJCLvRsA/exec';
     
-    // הגדרת תאריך היום אוטומטית
     document.getElementById('date').valueAsDate = new Date();
 
     const form = document.getElementById('sheetForm');
@@ -186,7 +192,6 @@
         btn.innerText = 'שולח...';
         status.style.display = 'none';
         
-        // עיבוד תאריך לפורמט D/M
         const rawDate = document.getElementById('date').value;
         let formattedDate = "";
         if (rawDate) {
@@ -214,7 +219,6 @@
                 body: JSON.stringify(data) 
             });
 
-            // הצלחה
             status.style.display = 'block';
             status.style.color = '#166534';
             status.style.backgroundColor = '#dcfce7';
